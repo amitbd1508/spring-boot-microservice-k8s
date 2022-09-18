@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.example</groupId>
+  <groupId>com.miniprojecttwo</groupId>
   <artifactId>Spring-Boot-Microservice-K8s</artifactId>
   <version>1.0.0</version>
   <name>spring-boot-microservice-k8s</name>
@@ -12,7 +12,8 @@
   <modules>
     <module>account-service</module>
     <module>product-service</module>
-
+    <module>order-service</module>
+    <module>payment-service</module>
   </modules>
 
 </project>
