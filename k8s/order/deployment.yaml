@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
       app: order
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -17,7 +17,7 @@ spec:
       containers:
         - name: order
           image: amitbd1508/order-service:1.0
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Never
           ports:
             - containerPort: 8080
           env: # Setting Enviornmental Variables

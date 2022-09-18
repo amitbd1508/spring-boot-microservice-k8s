@@ -1,6 +1,10 @@
+#!/bin/bash
 
-docker build -t amitbd1508/account-service:1.0 .
-docker build -t amitbd1508/order-service:1.0 .
-docker build -t amitbd1508/product-service:1.0 .
-docker build -t amitbd1508/payemnt-service:1.0 .
+set -x
+. ./set-env.sh
+
+docker push amitbd1508/account-service:$ACCOUNT_DOCKER_VERSION
+docker push amitbd1508/order-service:$ORDER_DOCKER_VERSION
+docker push amitbd1508/product-service:$PRODUCT_DOCKER_VERSION
+docker push amitbd1508/payemnt-service:$PAYMENT_DOCKER_VERSION
 
