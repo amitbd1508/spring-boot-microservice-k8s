@@ -1,6 +1,7 @@
 package com.miniprojecttwo.productservice.config;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
@@ -28,14 +29,16 @@ import static springfox.documentation.RequestHandler.byPatternsCondition;
 @Configuration
 public class SwaggerConfiguration {
 
+  @Value("${spring.application.name}")
+  private String applicationName;
   public static final String AUTHORIZATION_HEADER = "Authorization";
 
   private ApiInfo apiInfo() {
-    return new ApiInfo("My REST API",
+    return new ApiInfo(applicationName + " REST API",
       "Some custom description of API.",
       "1.0",
       "Terms of service",
-      new Contact("Sallo Szrajbman", "www.baeldung.com", "salloszraj@gmail.com"),
+      new Contact("Amit Ghosh", "www.amitghosh.me", "amitbd1508@gmail.com"),
       "License of API",
       "API license URL",
       Collections.emptyList());
@@ -54,7 +57,7 @@ public class SwaggerConfiguration {
   }
 
   private ApiKey apiKey() {
-    return new ApiKey("JWT", AUTHORIZATION_HEADER, "header");
+    return new ApiKey("Bearer", AUTHORIZATION_HEADER, "header");
   }
 
   private SecurityContext securityContext() {
@@ -71,6 +74,7 @@ public class SwaggerConfiguration {
     return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
   }
 
+  // Hack to run swagger
   @Bean
   public InitializingBean removeSpringfoxHandlerProvider(DocumentationPluginsBootstrapper bootstrapper) {
     return () -> bootstrapper.getHandlerProviders().removeIf(WebMvcRequestHandlerProvider.class::isInstance);
