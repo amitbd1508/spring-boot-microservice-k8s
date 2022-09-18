@@ -36,15 +36,14 @@ public class ProductController {
     public ResponseEntity<Product> saveProduct(@RequestBody Product product) {
         return new ResponseEntity<>(productService.save(product), HttpStatus.OK);
     }
-    @PostMapping("/{id}/deduct/{quantity}")
+    @PutMapping("/{id}/deduct/{quantity}")
     public ResponseEntity<?> deductProductQuantity(@PathVariable Long id, @PathVariable Long quantity) {
         Product productDTO = productService.deduct(id, quantity);
-        //TODO prepare an error response object
         if(productDTO == null) return new ResponseEntity<>("The requested quantity is beyond the stock on hand.", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(productDTO, HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/add/{quantity}")
+    @PutMapping("/{id}/add/{quantity}")
     public ResponseEntity<Product> addProductQuantity(@PathVariable Long id, @PathVariable Long quantity) {
         return new ResponseEntity<>(productService.add(id, quantity), HttpStatus.OK);
     }

@@ -1,6 +1,6 @@
 package com.miniprojecttwo.productservice.entity;
 
-import com.miniprojecttwo.productservice.util.Category;
+import com.miniprojecttwo.productservice.util.CategoryType;
 import com.miniprojecttwo.productservice.util.ProductMessage;
 import com.miniprojecttwo.productservice.util.ProductOperation;
 import lombok.AllArgsConstructor;
@@ -26,7 +26,7 @@ public class Product {
     private Long quantity;
     private double price;
     @Enumerated(EnumType.STRING)
-    private Category category;
+    private CategoryType categoryType;
 
     private Long thresholdQuantity;
 

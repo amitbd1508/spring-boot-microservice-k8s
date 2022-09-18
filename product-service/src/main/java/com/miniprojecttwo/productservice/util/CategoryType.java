@@ -1,6 +1,6 @@
 package com.miniprojecttwo.productservice.util;
 
-public enum Category {
+public enum CategoryType {
     FOOD,
     APPAREL,
     ELECTRONICS
