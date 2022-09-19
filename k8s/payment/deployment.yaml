@@ -17,7 +17,7 @@ spec:
       containers:
         - name: payment
           image: amitbd1508/payment-service:1.0
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           env: # Setting Enviornmental Variables
