@@ -40,23 +40,30 @@ public class AccountController {
     }
 
     // Get a single account by id
-    @GetMapping(RestEndpoints.BY_ID)
-    public ResponseEntity<?> findById(@PathVariable Long id){
-        Optional<Account> account = accountService.findById(id);
-        return ResponseEntity.ok(account);
-    }
-    // Get a single account by id
-    @DeleteMapping(RestEndpoints.BY_ID)
-    public ResponseEntity<?> deleteById(@PathVariable Long id){
-        accountService.deleteById(id);
-        return ResponseEntity.ok("Account deleted successfully !");
-    }
+//    @GetMapping(RestEndpoints.BY_ID)
+//    public ResponseEntity<?> findById(@PathVariable Long id){
+//        Optional<Account> account = accountService.findById(id);
+//        return ResponseEntity.ok(account);
+//    }
+//    // Get a single account by id
+//    @DeleteMapping(RestEndpoints.BY_ID)
+//    public ResponseEntity<?> deleteById(@PathVariable Long id){
+//        accountService.deleteById(id);
+//        return ResponseEntity.ok("Account deleted successfully !");
+//    }
 
     // Get a single account by id
     @GetMapping("{id}/preferredPaymentMethod")
     public ResponseEntity<?> findPreferredPaymentMethodById(@PathVariable Long id){
         Account account = accountService.findById(id).get();
         return ResponseEntity.ok(account.getPreferredPaymentMethod());
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<?> getByUserName(@PathVariable String username){
+        var accounts = accountService.findByUsername(username);
+        return ResponseEntity.ok(accounts);
+
     }
 
 }

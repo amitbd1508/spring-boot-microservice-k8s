@@ -111,6 +111,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public Account findByUsername(String username) {
+        return accountRepository.getUserByUsername(username).orElse(null);
+    }
+
+    @Override
     public Account update(Long id, Account accountBody) {
         // TO DO
         return null;
