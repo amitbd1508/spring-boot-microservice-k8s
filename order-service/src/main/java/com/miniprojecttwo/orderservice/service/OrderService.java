@@ -5,9 +5,14 @@ import com.miniprojecttwo.orderservice.model.OrderItem;
 import com.miniprojecttwo.orderservice.repository.OrderItemRepository;
 import com.miniprojecttwo.orderservice.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -73,6 +78,40 @@ public class OrderService {
         orderItemService.saveAll(order.getOrderItems());
         order.setTotalPrice(totalprice);
         orderRepository.save(order);
+
+        makePayment("paypal");
+
         return order;
+    }
+
+
+
+    private String makePayment(String paymentType){
+        try {
+            // request url
+            String url = "https://jsonplaceholder.typicode.com/posts";
+
+            // create auth credentials
+            String token = "jwttoken";
+
+
+            // create headers
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + token);
+
+            // create request
+            HttpEntity request = new HttpEntity(headers);
+
+            // make a request
+            ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.GET, request, String.class);
+
+            // get JSON response
+            String json = response.getBody();
+            return json;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 }
