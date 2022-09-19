@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
         - name: product
-          image: amitbd1508/product-service:1.0
-          imagePullPolicy: Never
+          image: amitbd1508/product-service:1.4
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           env: # Setting Enviornmental Variables
