@@ -29,5 +29,5 @@ spring:
 
 jwt:
   expiry: 300000
-  secret: asdfdf
+  secret: top-secret
 

@@ -23,10 +23,10 @@ spring:
 
 jwt:
   expiry: 300000
-  secret: fgdglkdfjhlkdh
+  secret: top-secret
 
 product.url: localhost:8084
 payment.url: localhost:8083
-account.url: localhost:8080
+account.url: http://localhost:8080/
 
 

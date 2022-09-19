@@ -1,5 +1,6 @@
 package com.miniprojecttwo.orderservice.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,6 +20,9 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtHelper jwtHelper;
 
     private final UserDetailsService userDetailsService;
+
+    @Autowired
+    private AwesomeUserDetailsService awesomeUserDetailsSvc;
 
     public JwtFilter(JwtHelper jwtHelper, UserDetailsService userDetailsService) {
         this.jwtHelper = jwtHelper;
@@ -41,10 +45,10 @@ public class JwtFilter extends OncePerRequestFilter {
             }catch (Exception e){
                 String isRefreshToken = request.getHeader("isRefreshToken");
             }
-
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            awesomeUserDetailsSvc.setToken(token);
             var userDetails = userDetailsService.loadUserByUsername(email);
             boolean isTokenValid = jwtHelper.validateToken(token);
             if (isTokenValid) {
