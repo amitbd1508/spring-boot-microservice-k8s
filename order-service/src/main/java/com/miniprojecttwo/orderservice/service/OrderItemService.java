@@ -13,6 +13,9 @@ public class OrderItemService {
     @Value("${product.url}")
     private String productUri;
 
+    @Value("${payment.url}")
+    private String paymentUri;
+
     @Autowired
     private OrderItemRepository repository;
 
@@ -20,6 +23,9 @@ public class OrderItemService {
         return this.productUri;
     }
 
+    public String getPaymentUri() {
+        return this.paymentUri;
+    }
 
     public List<OrderItem> saveAll(List<OrderItem> items) {
         return repository.saveAll(items);
