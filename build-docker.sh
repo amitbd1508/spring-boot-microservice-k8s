@@ -18,6 +18,6 @@ docker build -t amitbd1508/product-service:$PRODUCT_DOCKER_VERSION .
 popd
 
 pushd payment-service
-docker build -t amitbd1508/payemnt-service:$PAYMENT_DOCKER_VERSION .
+docker build -t amitbd1508/payment-service:$PAYMENT_DOCKER_VERSION .
 popd
 

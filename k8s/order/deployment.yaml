@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: order
-          image: amitbd1508/order-service:1.0
+          image: amitbd1508/order-service:1.1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
