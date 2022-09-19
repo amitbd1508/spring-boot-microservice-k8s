@@ -17,7 +17,7 @@ spec:
       containers:
         - name: order
           image: amitbd1508/order-service:1.0
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           env: # Setting Enviornmental Variables
