@@ -22,12 +22,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class AccountConfig extends WebSecurityConfigurerAdapter {
 
-    private JwtFilter jwtFilter;
-
     @Autowired
-    public AccountConfig(JwtFilter jwtFilter){
-        this.jwtFilter = jwtFilter;
-    }
+    private JwtFilter jwtFilter;
 
     @Bean
     public ModelMapper modelMapper() {

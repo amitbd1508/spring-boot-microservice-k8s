@@ -28,7 +28,7 @@ public class OrderService {
         double totalprice  = 0.0;
        List<OrderItem> items=  order.getOrderItems();
        for(OrderItem item:items) {
-           totalprice += item.getPrice();
+           totalprice += item.getPrice() * item.getQuantity();
        }
        order.setTotalPrice(totalprice);
        return orderRepository.save(order);

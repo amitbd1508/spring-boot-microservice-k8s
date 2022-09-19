@@ -1,12 +1,12 @@
 
 
 server:
-  port: 8083
+  port: 8080
 spring:
   application:
     name: account-service
   datasource:
-    url: jdbc:mysql://localhost:3306/paymentdb
+    url: jdbc:mysql://localhost:3306/accountdb
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -26,5 +26,4 @@ spring:
 jwt:
   expiry: 300000
   secret: asdfdf
-
 
