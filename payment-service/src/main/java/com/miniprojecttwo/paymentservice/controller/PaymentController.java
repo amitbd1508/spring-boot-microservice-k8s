@@ -5,6 +5,7 @@ import com.miniprojecttwo.paymentservice.DTO.CreditCardRequest;
 import com.miniprojecttwo.paymentservice.DTO.PaypalPaymentRequest;
 import com.miniprojecttwo.paymentservice.model.*;
 import com.miniprojecttwo.paymentservice.service.PaymentService;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/api/payment")
+@Api( tags = "Payment")
 public class PaymentController {
     private String paypalAddress;
     private String ccAddress;

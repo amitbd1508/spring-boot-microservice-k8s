@@ -26,3 +26,7 @@ jwt:
   expiry: ${JWT_EXPIRY}
   secret: ${JWT_SECRET}
 
+product.url: ${PRODUCT_URL}
+account.url: ${ACCOUNT_URL}
+payment.url: ${PAYMENT_URL}
+

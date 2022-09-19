@@ -29,10 +29,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        
+
         http
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/v2/api-docs/**","/swagger-ui/**","/swagger-resources/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
