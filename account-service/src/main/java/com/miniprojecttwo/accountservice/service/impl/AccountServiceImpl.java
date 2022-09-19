@@ -7,8 +7,8 @@ import com.miniprojecttwo.accountservice.entity.Account;
 import com.miniprojecttwo.accountservice.entity.PaymentMethod;
 import com.miniprojecttwo.accountservice.repo.AccountRepo;
 import com.miniprojecttwo.accountservice.repo.PaymentMethodRepo;
+import com.miniprojecttwo.accountservice.security.JwtHelper;
 import com.miniprojecttwo.accountservice.service.AccountService;
-import com.miniprojecttwo.accountservice.util.JwtUtil;
 import org.json.simple.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,14 +30,15 @@ public class AccountServiceImpl implements AccountService {
     AccountRepo accountRepository;
     @Autowired
     private PaymentMethodRepo paymentTypeRepository;
-    @Autowired
-    private JwtUtil jwtUtil;
     @Value("${jwt.secret}")
     private String secret;
     @Value("${jwt.expiry}")
     private String expiry;
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private  JwtHelper jwtHelper;
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -72,30 +74,25 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public ResponseEntity<?> authenticate(LoginDTO credentialsBody) {
         JSONObject responseObject = new JSONObject();
-        if(!validateInputs(credentialsBody.getUsername())){
-            responseObject.put("username","Username is required");
+        try {
+            var result = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(credentialsBody.getUsername(),
+                            credentialsBody.getPassword())
+            );
+        } catch (BadCredentialsException e) {
+            System.out.println("Exception : "+e);
+            responseObject.put("credentials","Invalid credentials");
+            return ResponseEntity.badRequest().body(responseObject);
         }
-        if(!validateInputs(credentialsBody.getPassword())){
-            responseObject.put("password","Password is required");
-        }
-        if(!responseObject.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseObject);
-        }else{
-            try {
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(credentialsBody.getUsername(), credentialsBody.getPassword())
-                );
-            } catch (Exception ex) {
-                System.out.println("Exception : "+ex);
-                responseObject.put("credentials","Invalid credentials");
-                return ResponseEntity.badRequest().body(responseObject);
-            }
-            Optional<Account> account = accountRepository.getUserByUsername(credentialsBody.getUsername());
-            String token = JwtUtil.generateToken(String.valueOf(account.get().getId()), secret, expiry);
-            responseObject.put("success",true);
-            responseObject.put("token","Bearer " +token);
-            return ResponseEntity.status(HttpStatus.OK).body(responseObject);
-        }
+
+        final String accessToken = jwtHelper.generateToken(credentialsBody.getUsername());
+        final String refreshToken = jwtHelper.generateRefreshToken(credentialsBody.getUsername());
+
+
+        responseObject.put("success",true);
+        responseObject.put("token","Bearer " +accessToken);
+        return ResponseEntity.status(HttpStatus.OK).body(responseObject);
+
     }
 
     @Override

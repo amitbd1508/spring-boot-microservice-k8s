@@ -16,12 +16,16 @@ spring:
       FAIL_ON_EMPTY_BEANS: false
 
   jpa:
-    hibernate.ddl-auto: create-drop
+    hibernate.ddl-auto: update
     generate-ddl: true
     show-sql: true
+    defer-datasource-initialization: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
+  sql:
+    init:
+      mode: always
 
 jwt:
   expiry: 300000
