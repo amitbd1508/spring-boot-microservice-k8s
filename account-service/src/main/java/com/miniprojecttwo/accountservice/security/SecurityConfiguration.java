@@ -19,41 +19,43 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService awesomeUserDetailsService;
-    private final JwtFilter jwtFilter;
+  private final UserDetailsService awesomeUserDetailsService;
+  private final JwtFilter jwtFilter;
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(awesomeUserDetailsService);
-    }
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.userDetailsService(awesomeUserDetailsService);
+  }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        
-        http
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/accounts/register").permitAll()
-                .antMatchers("/accounts/login").permitAll()
-                .antMatchers("/processcsv").hasAuthority("Admin")
-                .anyRequest()
-                .authenticated()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
 
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+    http
+      .csrf().disable()
+      .authorizeRequests()
+      .antMatchers("/v2/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
 
-    }
+      .antMatchers("/accounts/register").permitAll()
+      .antMatchers("/accounts/login").permitAll()
+      .antMatchers("/processcsv").hasAuthority("Admin")
+      .anyRequest()
+      .authenticated()
+      .and()
+      .sessionManagement()
+      .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+    http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  }
+
+  @Bean
+  @Override
+  public AuthenticationManager authenticationManagerBean() throws Exception {
+    return super.authenticationManagerBean();
+  }
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 }
