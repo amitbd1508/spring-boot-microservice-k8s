@@ -1,5 +1,6 @@
 package com.miniprojecttwo.orderservice.security;
 
+import com.miniprojecttwo.orderservice.model.dto.Account;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,15 +28,26 @@ public class AwesomeUserDetailsService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-    System.out.println("======token "+ token);
-    String user = getUserDetails(token);
-    System.out.println("======user "+ user);
+    Account user = getUserDetails(token, username);
 
-    var userDetails = new AwesomeUserDetails();
-    return userDetails;
+    if(user!= null){
+      var userDetails = new AwesomeUserDetails();
+      userDetails.setEmail(user.getEmail());
+      userDetails.setUsername(user.getUsername());
+      userDetails.setFirstname(user.getFirstname());
+      userDetails.setLastname(user.getLastname());
+      userDetails.setPreferredPaymentMethod(user.getPreferredPaymentMethod());
+      userDetails.setShippingAddress(user.getShippingAddress());
+      return userDetails;
+
+    }
+
+    return null;
+
+
   }
 
-  private String getUserDetails(String token){
+  private Account getUserDetails(String token, String username){
     try {
       // create headers
       HttpHeaders headers = new HttpHeaders();
@@ -45,10 +57,14 @@ public class AwesomeUserDetailsService implements UserDetailsService {
       HttpEntity request = new HttpEntity(headers);
 
       // make a request
-      ResponseEntity<String> response = new RestTemplate().exchange(accountUrl, HttpMethod.GET, request, String.class);
+      ResponseEntity<Account> response = new RestTemplate().exchange(accountUrl+"/accounts/"+username, HttpMethod.GET, request, Account.class);
+
 
       // get JSON response
-      String json = response.getBody();
+      Account json = response.getBody();
+
+      System.out.println("======= json "+ json.getFirstname());
+
       return json;
 
     } catch (Exception ex) {

@@ -1,11 +1,13 @@
 package com.miniprojecttwo.orderservice.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.miniprojecttwo.orderservice.model.dto.Address;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.Embedded;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.stream.Collectors;
 @Data
 public class AwesomeUserDetails implements UserDetails {
 
-    private int id;
+    private Long id;
     private String email;
 
     @JsonIgnore
@@ -22,10 +24,19 @@ public class AwesomeUserDetails implements UserDetails {
 
     private List<String> roles;
 
+    private String firstname;
+    private String lastname;
+    private String username;
+
+    @Embedded
+    private Address shippingAddress;
+
+    private String preferredPaymentMethod;
+
     public AwesomeUserDetails() {
         this.email = "";
         this.password = "";
-        this.id =-1;
+        this.id =-1L;
         this.roles = new ArrayList<>();
     }
 
