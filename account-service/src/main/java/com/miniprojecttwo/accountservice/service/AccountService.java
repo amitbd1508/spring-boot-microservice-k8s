@@ -22,5 +22,7 @@ public interface AccountService {
 
     void deleteById(Long id);
 
+    Account findByUsername(String username);
+
     Account update(Long id, Account accountBody);
 }
