@@ -21,6 +21,9 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
+  sql:
+    init:
+      mode: always
 
 jwt:
   expiry: ${JWT_EXPIRY}
