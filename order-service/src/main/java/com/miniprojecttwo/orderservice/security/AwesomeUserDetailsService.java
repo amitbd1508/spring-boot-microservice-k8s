@@ -21,6 +21,12 @@ public class AwesomeUserDetailsService implements UserDetailsService {
   private String accountUrl;
   private String token = "";
 
+  private Account account;
+
+  public Account getAccount() {
+    return account;
+  }
+
   public void setToken(String token) {
     this.token = token;
   }
@@ -31,6 +37,8 @@ public class AwesomeUserDetailsService implements UserDetailsService {
     Account user = getUserDetails(token, username);
 
     if(user!= null){
+      this.account = user;
+      System.out.println("user==================");
       var userDetails = new AwesomeUserDetails();
       userDetails.setEmail(user.getEmail());
       userDetails.setUsername(user.getUsername());
