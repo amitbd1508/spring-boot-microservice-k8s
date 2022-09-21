@@ -22,4 +22,6 @@ spring:
   sql:
     init:
       mode: always
+account.url: ${ACCOUNT_URL}
+
 

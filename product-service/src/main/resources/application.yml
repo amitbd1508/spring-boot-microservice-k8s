@@ -24,4 +24,9 @@ spring:
   sql:
     init:
       mode: always
+jwt:
+  expiry: 300000
+  secret: top-secret
+account.url: http://localhost:8080
+
 

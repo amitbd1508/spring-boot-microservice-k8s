@@ -1,8 +1,8 @@
 package com.miniprojecttwo.paymentservice.controller;
 
-import com.miniprojecttwo.paymentservice.DTO.BankAccountRequest;
-import com.miniprojecttwo.paymentservice.DTO.CreditCardRequest;
-import com.miniprojecttwo.paymentservice.DTO.PaypalPaymentRequest;
+import com.miniprojecttwo.paymentservice.dto.BankAccountRequest;
+import com.miniprojecttwo.paymentservice.dto.CreditCardRequest;
+import com.miniprojecttwo.paymentservice.dto.PaypalPaymentRequest;
 import com.miniprojecttwo.paymentservice.model.*;
 import com.miniprojecttwo.paymentservice.service.PaymentService;
 import io.swagger.annotations.Api;
