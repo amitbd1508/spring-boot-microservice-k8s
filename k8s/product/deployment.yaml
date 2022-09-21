@@ -28,6 +28,11 @@ spec:
                 configMapKeyRef:
                   name: product-app-config
                   key: db_url
+            - name: PRODUCT_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: product-app-config
+                  key: product_token
 
             - name: DB_PORT
               value: "3306"
@@ -87,7 +92,7 @@ data:
   db_url: product-db-service
   topic-name: topic
   jwt_expire: "3600000"
-
+  product_token: producttoken01jdskfhkd
 
 ---
 apiVersion: v1

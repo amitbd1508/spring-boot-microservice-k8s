@@ -23,5 +23,7 @@ spring:
     init:
       mode: always
 account.url: ${ACCOUNT_URL}
+product.token : ${PRODUCT_TOKEN}
+
 
 
