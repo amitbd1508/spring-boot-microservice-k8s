@@ -54,21 +54,27 @@ public class AccountServiceImpl implements AccountService {
                 paymentTypeRepository.getPaymentMethodByName("debit card").get()));
         System.out.println("this one");
         System.out.println();
-        Account account = new Account();
-        account.setFirstname(accountBody.getFirstname());
-        account.setLastname(accountBody.getLastname());
-        account.setEmail(accountBody.getEmail());
-        account.setPassword(encodedPassword);
-        account.setUsername(accountBody.getUsername());
-        System.out.println("before one");
-        account.setPaymentMethods(paymentTypes);
-        System.out.println("after one");
-        account.setPreferredPaymentMethod(accountBody.getPreferredPaymentType());
-        account.setShippingAddress(accountBody.getShippingAddress());
-        accountRepository.save(account);
-        AccountDTO accountDTO = modelMapper.map(account, AccountDTO.class);
+        var dbUser = accountRepository.getUserByUsername(accountBody.getUsername()).orElse(null);
+        if(dbUser== null){
+            Account account = new Account();
+            account.setFirstname(accountBody.getFirstname());
+            account.setLastname(accountBody.getLastname());
+            account.setEmail(accountBody.getEmail());
+            account.setPassword(encodedPassword);
+            account.setUsername(accountBody.getUsername());
+            System.out.println("before one");
+            account.setPaymentMethods(paymentTypes);
+            System.out.println("after one");
+            account.setPreferredPaymentMethod(accountBody.getPreferredPaymentType());
+            account.setShippingAddress(accountBody.getShippingAddress());
+            accountRepository.save(account);
+            AccountDTO accountDTO = modelMapper.map(account, AccountDTO.class);
 
-        return accountDTO;
+            return accountDTO;
+        }else {
+            return null;
+        }
+
     }
 
     @Override
