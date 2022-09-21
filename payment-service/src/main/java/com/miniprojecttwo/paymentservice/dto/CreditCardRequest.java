@@ -1,4 +1,4 @@
-package com.miniprojecttwo.paymentservice.DTO;
+package com.miniprojecttwo.paymentservice.dto;
 
 import lombok.Data;
 import lombok.NonNull;
