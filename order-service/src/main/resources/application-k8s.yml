@@ -30,3 +30,6 @@ product.url: ${PRODUCT_URL}
 account.url: ${ACCOUNT_URL}
 payment.url: ${PAYMENT_URL}
 
+payment.token : ${PAYMENT_TOKEN}
+product.token : ${PRODUCT_TOKEN}
+

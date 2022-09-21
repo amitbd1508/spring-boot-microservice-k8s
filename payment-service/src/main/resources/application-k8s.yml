@@ -16,3 +16,4 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+payment.token : ${PAYMENT_TOKEN}

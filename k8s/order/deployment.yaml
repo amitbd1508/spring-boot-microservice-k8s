@@ -27,6 +27,16 @@ spec:
               value: http://payment-svc:8080
             - name: ACCOUNT_URL
               value: http://account-svc:8080
+            - name: PAYMENT_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: order-app-config
+                  key: payment_token
+            - name: PRODUCT_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: order-app-config
+                  key: product_token
             - name: DB_URL
               valueFrom:
                 configMapKeyRef:
@@ -91,6 +101,8 @@ data:
   db_url: order-db-service
   topic-name: topic
   jwt_expire: "3600000"
+  product_token: producttoken01jdskfhkd
+  payment_token: paymentttoken01sdfsdfs
 
 ---
 apiVersion: v1
