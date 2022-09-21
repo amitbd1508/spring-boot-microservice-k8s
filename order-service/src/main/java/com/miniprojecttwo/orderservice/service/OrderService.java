@@ -11,6 +11,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,8 @@ import java.util.stream.StreamSupport;
 @Service
 public class OrderService {
 
+    @Autowired
+    private CircuitBreakerFactory circuitBreakerFactory;
     @Autowired
     private OrderRepository orderRepository;
 
@@ -202,7 +206,9 @@ public class OrderService {
 
     private String makePayment(String paymentType, String userid, String orderId, double balance, String methodId){
         try {
-            String purl = "";
+          CircuitBreaker circuitBreaker = circuitBreakerFactory.create("make-payment-circuitbreaker");
+
+          String purl = "";
 
             var body = new JSONObject();
             body.put("balance",balance);
@@ -242,10 +248,14 @@ public class OrderService {
             HttpEntity<String> request =
                     new HttpEntity<String>(body.toString(), headers);
 
-            ResponseEntity<String> response = new RestTemplate().postForEntity(url, request, String.class);
+//            ResponseEntity<String> response = new RestTemplate().postForEntity(url, request, String.class);
+//
+//            String json = response.getBody();
+//            return json;
 
-            String json = response.getBody();
-            return json;
+
+            return circuitBreaker.run(() -> restTemplate.postForEntity(url,request, String.class)).getBody();
+
 
         } catch (Exception ex) {
             ex.printStackTrace();
