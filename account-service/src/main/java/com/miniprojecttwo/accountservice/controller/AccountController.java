@@ -29,6 +29,9 @@ public class AccountController {
     @PostMapping(RestEndpoints.REGISTER)
     public ResponseEntity<?> save(@RequestBody AccountRegistrationDTO accountBody){
         AccountDTO account = accountService.save(accountBody);
+        if(account== null)
+            return ResponseEntity.ok("Duplicate username");
+
         return ResponseEntity.ok(account);
     }
 
