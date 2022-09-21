@@ -1,10 +1,15 @@
 package com.miniprojecttwo.orderservice.service;
 
+import com.miniprojecttwo.orderservice.enums.OrderStatus;
 import com.miniprojecttwo.orderservice.model.Order;
 import com.miniprojecttwo.orderservice.model.OrderItem;
 import com.miniprojecttwo.orderservice.repository.OrderItemRepository;
 import com.miniprojecttwo.orderservice.repository.OrderRepository;
+import com.miniprojecttwo.orderservice.security.AwesomeUserDetailsService;
+import com.miniprojecttwo.orderservice.util.UserUtil;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,6 +34,11 @@ public class OrderService {
     @Autowired
     private OrderItemRepository orderItemRepository;
 
+    @Autowired
+    AwesomeUserDetailsService awesomeUserDetailsService;
+
+    @Value("${payment.url}")
+    private String paymentUrl;
     public Order addOrder(Order order){
         double totalprice  = 0.0;
        List<OrderItem> items=  order.getOrderItems();
@@ -79,17 +89,47 @@ public class OrderService {
         order.setTotalPrice(totalprice);
         orderRepository.save(order);
 
-        makePayment("paypal");
+        var user= awesomeUserDetailsService.getAccount();
 
+        var paymentResponse =makePayment(user.getPreferredPaymentMethod(),order.getUserId().toString(),order.getId().toString(), order.getTotalPrice(), "12345678"  );
+
+        if(paymentResponse== "SUCCESS"){
+            // reduce product
+            order.setOrderStatus(OrderStatus.COMPLETED);
+            orderRepository.save(order);
+        }
         return order;
     }
 
 
 
-    private String makePayment(String paymentType){
+    private String makePayment(String paymentType, String userid, String orderId, double balance, String methodId){
         try {
-            // request url
-            String url = "https://jsonplaceholder.typicode.com/posts";
+            String purl = "";
+
+            var body = new JSONObject();
+            body.put("balance",balance);
+            body.put("orderId",orderId);
+            body.put("userId",userid);
+
+            if(paymentType=="paypal"){
+                purl="paypal";
+                body.put("paypalId",methodId);
+
+            }
+
+
+            if(paymentType =="credit card"){
+                purl="creditcard";
+                body.put("creditCardNumber",methodId);
+            }
+
+            if(paymentType=="debit card"){
+                purl="bankaccount";
+                body.put("bankId",methodId);
+            }
+
+            String url = this.paymentUrl+"/payment/"+paymentUrl;
 
             // create auth credentials
             String token = "jwttoken";
@@ -100,12 +140,12 @@ public class OrderService {
             headers.add("Authorization", "Bearer " + token);
 
             // create request
-            HttpEntity request = new HttpEntity(headers);
+            //HttpEntity request = new HttpEntity(headers);
+            HttpEntity<String> request =
+                    new HttpEntity<String>(body.toString(), headers);
 
-            // make a request
-            ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.GET, request, String.class);
+            ResponseEntity<String> response = new RestTemplate().postForEntity(url, request, String.class);
 
-            // get JSON response
             String json = response.getBody();
             return json;
 

@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class UserUtil {
     @Autowired
-    AwesomeUserDetailsService awesomeUserDetailsService;
+    static AwesomeUserDetailsService awesomeUserDetailsService;
     public static Integer getLoggedInUserId(){
 
         var obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -16,7 +16,8 @@ public class UserUtil {
         return 1;
     }
 
-    public Account getLoggedInUser(){
+    public static Account getLoggedInUser(){
+
         return awesomeUserDetailsService.getAccount();
     }
 }
