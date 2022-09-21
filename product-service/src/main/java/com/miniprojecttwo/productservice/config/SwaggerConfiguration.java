@@ -6,10 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
-import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.*;
-import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.RequestHandlerProvider;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.WebMvcRequestHandler;
@@ -21,17 +19,18 @@ import springfox.documentation.spring.web.readers.operation.HandlerMethodResolve
 
 import javax.servlet.ServletContext;
 import java.util.*;
-import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static springfox.documentation.RequestHandler.byPatternsCondition;
+import static springfox.documentation.spi.DocumentationType.SWAGGER_2;
 
 @Configuration
 public class SwaggerConfiguration {
 
   @Value("${spring.application.name}")
   private String applicationName;
-  public static final String AUTHORIZATION_HEADER = "Authorization";
 
   private ApiInfo apiInfo() {
     return new ApiInfo(applicationName + " REST API",
@@ -46,23 +45,22 @@ public class SwaggerConfiguration {
 
   @Bean
   public Docket api() {
-    return new Docket(DocumentationType.SWAGGER_2)
+    return new Docket(SWAGGER_2)
+      .securitySchemes(singletonList(new ApiKey("JWT", AUTHORIZATION, "header")))
+      .securityContexts(singletonList(
+        SecurityContext.builder()
+          .securityReferences(
+            singletonList(SecurityReference.builder()
+              .reference("JWT")
+              .scopes(new AuthorizationScope[0])
+              .build()
+            )
+          )
+          .build())
+      )
       .apiInfo(apiInfo())
-      .securityContexts(Arrays.asList(securityContext()))
-      .securitySchemes(Arrays.asList(apiKey()))
       .select()
-      .apis(RequestHandlerSelectors.any())
-      .paths(PathSelectors.any())
-      .build();
-  }
-
-  private ApiKey apiKey() {
-    return new ApiKey("Bearer", AUTHORIZATION_HEADER, "header");
-  }
-
-  private SecurityContext securityContext() {
-    return SecurityContext.builder()
-      .securityReferences(defaultAuth())
+      .apis(RequestHandlerSelectors.basePackage("com.miniprojecttwo.productservice.controller"))
       .build();
   }
 

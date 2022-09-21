@@ -31,4 +31,3 @@ jwt:
   expiry: 300000
   secret: top-secret
 
-

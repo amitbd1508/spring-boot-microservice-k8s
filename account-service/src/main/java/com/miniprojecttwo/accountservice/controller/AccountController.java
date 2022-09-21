@@ -8,6 +8,9 @@ import com.miniprojecttwo.accountservice.dto.AccountRegistrationDTO;
 import com.miniprojecttwo.accountservice.dto.LoginDTO;
 import com.miniprojecttwo.accountservice.entity.Account;
 import com.miniprojecttwo.accountservice.service.AccountService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +20,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(RestEndpoints.ACCOUNTS)
+@Api( tags = "Account")
 public class AccountController {
 
     @Autowired
