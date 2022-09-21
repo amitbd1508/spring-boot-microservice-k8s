@@ -23,6 +23,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
 
-
+jwt:
+  expiry: 300000
+  secret: top-secret
 
 payment.token : top-secret-payment-token

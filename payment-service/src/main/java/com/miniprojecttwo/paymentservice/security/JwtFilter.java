@@ -1,4 +1,4 @@
-package com.miniprojecttwo.productservice.security;
+package com.miniprojecttwo.paymentservice.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,8 +25,8 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private AwesomeUserDetailsService awesomeUserDetailsSvc;
 
-    @Value("${product.token}")
-    private String product_token;
+    @Value("${payment.token}")
+    private String payment_token;
 
     public JwtFilter(JwtHelper jwtHelper, UserDetailsService userDetailsService) {
         this.jwtHelper = jwtHelper;
@@ -40,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         final String internalToken = request.getHeader("internal-token");
 
-        if(internalToken!= null && internalToken.equals(this.product_token)){
+        if(internalToken!= null && internalToken.equals(this.payment_token)){
             var userDetails = userDetailsService.loadUserByUsername("");
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities());

@@ -1,4 +1,4 @@
-package com.miniprojecttwo.productservice.security;
+package com.miniprojecttwo.paymentservice.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -35,9 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
       .csrf().disable()
       .authorizeRequests()
       .antMatchers("/v2/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
-      .antMatchers(HttpMethod.GET,"/products").permitAll()
-            .antMatchers(HttpMethod.POST,"/products/deduct-inventory").authenticated()
-
+            .anyRequest().authenticated()
       .and()
       .sessionManagement()
       .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

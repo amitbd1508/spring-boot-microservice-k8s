@@ -45,6 +45,11 @@ public class OrderService {
 
     @Value("${product.url}")
     private String productUrl;
+
+    @Value("${product.token}")
+    private String productToken;
+    @Value("${payment.token}")
+    private String paymentToken;
     public Order addOrder(Order order){
         double totalprice  = 0.0;
        List<OrderItem> items=  order.getOrderItems();
@@ -55,30 +60,6 @@ public class OrderService {
        return orderRepository.save(order);
     }
 
-    public List<Order> getOrders(){
-
-        return StreamSupport.stream(orderRepository.findAll().spliterator(), false).collect(Collectors.toList());
-
-    }
-
-    public Order getOrderById(int id){
-        return orderRepository.findById(id)
-                .orElseThrow(()->new IllegalArgumentException("Invalid id : "+id));
-    }
-
-    public OrderItem addOrderItem(OrderItem orderItem){
-        return orderItemRepository.save(orderItem);
-    }
-
-    public List<OrderItem> getOrderItems(){
-        return StreamSupport.stream(orderItemRepository.findAll().spliterator(), false).collect(Collectors.toList());
-
-    }
-
-    public OrderItem getOrderItemById(int id){
-        return orderItemRepository.findById(id)
-                .orElseThrow(()->new IllegalArgumentException("Invalid id : "+id));
-    }
 
     public Order save(Order order) {
         double totalprice  = 0.0;
@@ -146,7 +127,7 @@ public class OrderService {
 
         }else{
             var dborder = orderRepository.findById(order.getId()).orElse(null);
-            dborder.setOrderStatus(OrderStatus.ERROR);
+            dborder.setOrderStatus(OrderStatus.PARTIALLYFAILED);
             //dborder.setOrderItems(null);
             orderRepository.save(dborder);
             return dborder;
@@ -157,13 +138,12 @@ public class OrderService {
         String url = this.productUrl+"/products/deduct-inventory";
 
         try {
-            // create auth credentials
-            String token = "jwttoken";
+
 
 
             // create headers
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", "Bearer " + token);
+            headers.add("internal-token", productToken);
             headers.add("Content-Type","application/json");
 
             // create request
@@ -234,7 +214,7 @@ public class OrderService {
 
             // create headers
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", "Bearer " + token);
+            headers.add("internal-token", this.productToken);
             headers.add("Content-Type","application/json");
 
             // create request
