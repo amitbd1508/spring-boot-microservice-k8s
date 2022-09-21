@@ -60,12 +60,12 @@ spec:
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: order-app-secret
+                  name: product-app-secret
                   key: jwt-secret
             - name: JWT_EXPIRY
               valueFrom:
                 configMapKeyRef:
-                  name: order-app-config
+                  name: product-app-config
                   key: jwt_expire
 
 ---

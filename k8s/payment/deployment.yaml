@@ -57,6 +57,16 @@ spec:
                 secretKeyRef:
                   name: paymentdb-secrets
                   key: password
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: payment-app-secret
+                  key: jwt-secret
+            - name: JWT_EXPIRY
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-app-config
+                  key: jwt_expire
 
 ---
 
@@ -82,7 +92,7 @@ data:
   db_url: payment-db-service
   topic-name: topic
   payment_token: paymentttoken01sdfsdfs
-
+  jwt_expire: "3600000"
 
 ---
 apiVersion: v1
@@ -93,3 +103,4 @@ type: Opaque
 stringData:
   username: cm9vdA==
   password: MTk4Ng==
+  jwt-secret: FKckg7aj1rt9scui5ik5tr93d0FKckg7aj1rt9scui5ik5tr93d0FKckg7aj1rt9scui5ik5tr93d0
