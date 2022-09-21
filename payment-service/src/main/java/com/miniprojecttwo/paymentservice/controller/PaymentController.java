@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/payment")
+@RequestMapping("/payment")
 @Api( tags = "Payment")
 public class PaymentController {
     private String paypalAddress;

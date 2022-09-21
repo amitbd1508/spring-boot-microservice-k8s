@@ -6,25 +6,25 @@ import com.miniprojecttwo.orderservice.model.OrderItem;
 import com.miniprojecttwo.orderservice.repository.OrderItemRepository;
 import com.miniprojecttwo.orderservice.repository.OrderRepository;
 import com.miniprojecttwo.orderservice.security.AwesomeUserDetailsService;
-import com.miniprojecttwo.orderservice.util.UserUtil;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+
     @Autowired
     private  RestTemplate restTemplate;
 
@@ -50,7 +50,9 @@ public class OrderService {
     }
 
     public List<Order> getOrders(){
-        return orderRepository.findAll();
+
+        return StreamSupport.stream(orderRepository.findAll().spliterator(), false).collect(Collectors.toList());
+
     }
 
     public Order getOrderById(int id){
@@ -63,7 +65,8 @@ public class OrderService {
     }
 
     public List<OrderItem> getOrderItems(){
-        return orderItemRepository.findAll();
+        return StreamSupport.stream(orderItemRepository.findAll().spliterator(), false).collect(Collectors.toList());
+
     }
 
     public OrderItem getOrderItemById(int id){
@@ -73,30 +76,36 @@ public class OrderService {
 
     public Order save(Order order) {
         double totalprice  = 0.0;
+        var user= awesomeUserDetailsService.getAccount();
+
+        order.setUserId(user.getId().intValue());
         for (OrderItem p : order.getOrderItems()) {
 
 
-            OrderItem item = restTemplate.getForObject(orderItemService.getProductUri()+p.getProductId(), OrderItem.class);
-            System.out.println(item.getPrice());
-            System.out.println(p.getQuantity());
+            OrderItem item = restTemplate.getForObject(orderItemService.getProductUri()+"/products/"+p.getProductId(), OrderItem.class);
+            //System.out.println(item.getPrice());
+            //System.out.println(p.getQuantity());
             if(item.getQuantity() < p.getQuantity()) {
                 return null;
             }
             totalprice += p.getQuantity() * item.getPrice();
             p.setPrice(item.getPrice());
         }
-        orderItemService.saveAll(order.getOrderItems());
+        //orderItemService.saveAll(order.getOrderItems());
         order.setTotalPrice(totalprice);
         orderRepository.save(order);
 
-        var user= awesomeUserDetailsService.getAccount();
+
 
         var paymentResponse =makePayment(user.getPreferredPaymentMethod(),order.getUserId().toString(),order.getId().toString(), order.getTotalPrice(), "12345678"  );
 
-        if(paymentResponse== "SUCCESS"){
+        if(paymentResponse.equals("\"SUCCESS\"")){
             // reduce product
-            order.setOrderStatus(OrderStatus.COMPLETED);
-            orderRepository.save(order);
+
+            var dborder = orderRepository.findById(order.getId()).orElse(null);
+            dborder.setOrderStatus(OrderStatus.COMPLETED);
+            //dborder.setOrderItems(null);
+            orderRepository.save(dborder);
         }
         return order;
     }
@@ -112,24 +121,24 @@ public class OrderService {
             body.put("orderId",orderId);
             body.put("userId",userid);
 
-            if(paymentType=="paypal"){
+            if(paymentType.equals("paypal")){
                 purl="paypal";
                 body.put("paypalId",methodId);
 
             }
 
 
-            if(paymentType =="credit card"){
+            if(paymentType.equals("credit card")){
                 purl="creditcard";
                 body.put("creditCardNumber",methodId);
             }
 
-            if(paymentType=="debit card"){
+            if(paymentType.equals("debit card")){
                 purl="bankaccount";
                 body.put("bankId",methodId);
             }
 
-            String url = this.paymentUrl+"/payment/"+paymentUrl;
+            String url = this.paymentUrl+"/payment/"+purl;
 
             // create auth credentials
             String token = "jwttoken";
@@ -138,6 +147,7 @@ public class OrderService {
             // create headers
             HttpHeaders headers = new HttpHeaders();
             headers.add("Authorization", "Bearer " + token);
+            headers.add("Content-Type","application/json");
 
             // create request
             //HttpEntity request = new HttpEntity(headers);

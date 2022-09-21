@@ -26,7 +26,8 @@ public class Order {
     @Column(name = "total_price")
     private Double totalPrice;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.MERGE,orphanRemoval = true)
+    @JoinColumn(name = "order_id",referencedColumnName = "id",insertable = false,updatable = false)
     private List<OrderItem> orderItems;
 
     @Enumerated(EnumType.STRING)
