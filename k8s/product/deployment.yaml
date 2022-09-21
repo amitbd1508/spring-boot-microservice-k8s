@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: product
-          image: amitbd1508/product-service:1.6
+          image: amitbd1508/product-service:2.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
