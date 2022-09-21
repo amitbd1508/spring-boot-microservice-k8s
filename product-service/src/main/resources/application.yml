@@ -28,5 +28,5 @@ jwt:
   expiry: 300000
   secret: top-secret
 account.url: http://localhost:8080
-
+product.token : top-secret-product-token
 

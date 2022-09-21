@@ -29,4 +29,7 @@ product.url: http://localhost:8084
 payment.url: http://localhost:8083
 account.url: http://localhost:8080
 
+payment.token : top-secret-payment-token
+product.token : top-secret-product-token
+
 

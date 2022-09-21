@@ -25,3 +25,4 @@ spring:
 
 
 
+payment.token : top-secret-payment-token
