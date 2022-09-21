@@ -1,5 +1,6 @@
 package com.miniprojecttwo.productservice.service;
 
+import com.miniprojecttwo.productservice.dto.DeductInventoryRequest;
 import com.miniprojecttwo.productservice.entity.Product;
 import org.springframework.stereotype.Service;
 
@@ -12,4 +13,6 @@ public interface ProductService {
   Product save(Product product);
   Product deduct(Long id, Long quantity);
   Product add(Long id, Long quantity);
+
+  String deductInventory(List<DeductInventoryRequest> products);
 }
