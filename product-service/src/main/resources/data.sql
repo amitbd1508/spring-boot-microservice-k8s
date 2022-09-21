@@ -1,0 +1,5 @@
+INSERT INTO product (id, category_type, name, price, quantity, threshold_quantity, vendor) VALUES (1000, 'ELECTRONICS', 'iPhone 14', 2000, 10, 2, 'apple')
+INSERT INTO product (id, category_type, name, price, quantity, threshold_quantity, vendor) VALUES (1001, 'ELECTRONICS', 'iPhone 13', 1000, 10, 2, 'apple')
+INSERT INTO product (id, category_type, name, price, quantity, threshold_quantity, vendor) VALUES (1002, 'ELECTRONICS', 'iPhone 12', 900, 10, 2, 'apple')
+INSERT INTO product (id, category_type, name, price, quantity, threshold_quantity, vendor) VALUES (1003, 'ELECTRONICS', 'iPhone 11', 800, 10, 2, 'apple')
+INSERT INTO product (id, category_type, name, price, quantity, threshold_quantity, vendor) VALUES (1004, 'ELECTRONICS', 'iPhone 10', 1000, 10, 2, 'apple')
