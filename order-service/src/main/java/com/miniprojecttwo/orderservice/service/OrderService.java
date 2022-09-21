@@ -3,9 +3,11 @@ package com.miniprojecttwo.orderservice.service;
 import com.miniprojecttwo.orderservice.enums.OrderStatus;
 import com.miniprojecttwo.orderservice.model.Order;
 import com.miniprojecttwo.orderservice.model.OrderItem;
+import com.miniprojecttwo.orderservice.model.dto.DeductProductRequest;
 import com.miniprojecttwo.orderservice.repository.OrderItemRepository;
 import com.miniprojecttwo.orderservice.repository.OrderRepository;
 import com.miniprojecttwo.orderservice.security.AwesomeUserDetailsService;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -39,6 +42,9 @@ public class OrderService {
 
     @Value("${payment.url}")
     private String paymentUrl;
+
+    @Value("${product.url}")
+    private String productUrl;
     public Order addOrder(Order order){
         double totalprice  = 0.0;
        List<OrderItem> items=  order.getOrderItems();
@@ -99,16 +105,98 @@ public class OrderService {
 
         var paymentResponse =makePayment(user.getPreferredPaymentMethod(),order.getUserId().toString(),order.getId().toString(), order.getTotalPrice(), "12345678"  );
 
-        if(paymentResponse.equals("\"SUCCESS\"")){
+        if(paymentResponse!=null && paymentResponse.equals("\"SUCCESS\"")){
             // reduce product
 
+
+
+            List<DeductProductRequest> lists= new ArrayList<>();
+            order.getOrderItems().forEach(item->{
+                var tmp=new DeductProductRequest();
+                tmp.setQuantity(item.getQuantity());
+                tmp.setProductId(item.getProductId());
+                lists.add(tmp);
+
+            });
+
+            var result = deductProductInventory(lists);
+            //"PartiallyFailed": "Success"
+            if(result!= null &&result.equals("PartiallyFailed")){
+                var dborder = orderRepository.findById(order.getId()).orElse(null);
+                dborder.setOrderStatus(OrderStatus.PARTIALLYFAILED);
+                //dborder.setOrderItems(null);
+                orderRepository.save(dborder);
+                return dborder;
+            }
+
+            if(result!= null &&result.equals("Success")){
+                var dborder = orderRepository.findById(order.getId()).orElse(null);
+                dborder.setOrderStatus(OrderStatus.COMPLETED);
+                //dborder.setOrderItems(null);
+                orderRepository.save(dborder);
+
+                return dborder;
+            }
+
             var dborder = orderRepository.findById(order.getId()).orElse(null);
-            dborder.setOrderStatus(OrderStatus.COMPLETED);
+            dborder.setOrderStatus(OrderStatus.PAMENTCOMPLETED);
             //dborder.setOrderItems(null);
             orderRepository.save(dborder);
+            return dborder;
+
+        }else{
+            var dborder = orderRepository.findById(order.getId()).orElse(null);
+            dborder.setOrderStatus(OrderStatus.ERROR);
+            //dborder.setOrderItems(null);
+            orderRepository.save(dborder);
+            return dborder;
         }
-        return order;
     }
+
+    private String deductProductInventory(List<DeductProductRequest> items){
+        String url = this.productUrl+"/products/deduct-inventory";
+
+        try {
+            // create auth credentials
+            String token = "jwttoken";
+
+
+            // create headers
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + token);
+            headers.add("Content-Type","application/json");
+
+            // create request
+            //HttpEntity request = new HttpEntity(headers);
+            var obj = JSONArray.toJSONString(items);
+            var js = new JSONArray();
+            items.forEach(it->{
+                var tmp = new JSONObject();
+                tmp.put("productId", it.getProductId());
+                tmp.put("quantity", it.getQuantity());
+                js.add(tmp);
+            });
+
+            var jss = js.toJSONString();
+
+            HttpEntity<String> request =
+                    new HttpEntity<String>(jss, headers);
+
+
+
+            ResponseEntity<String> response = new RestTemplate().postForEntity(url,request, String.class);
+
+            String json = response.getBody();
+            return json;
+        }catch (Exception ex){
+            return null;
+
+        }
+
+
+    }
+
+
 
 
 

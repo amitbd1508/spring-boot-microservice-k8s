@@ -51,7 +51,7 @@ public class ProductController {
     return new ResponseEntity<>(productService.add(id, quantity), HttpStatus.OK);
   }
 
-  @PutMapping("/deduct-inventory")
+  @PostMapping ("/deduct-inventory")
   public ResponseEntity<String> deductInventory(@RequestBody List<DeductInventoryRequest> products){
     return new ResponseEntity<>(productService.deductInventory(products), HttpStatus.OK);
   }
