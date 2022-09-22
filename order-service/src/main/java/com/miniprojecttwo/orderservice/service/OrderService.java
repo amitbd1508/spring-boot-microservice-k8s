@@ -223,16 +223,8 @@ public class OrderService {
             headers.add("internal-token", this.paymentToken);
             headers.add("Content-Type","application/json");
 
-            // create request
-            //HttpEntity request = new HttpEntity(headers);
             HttpEntity<String> request =
                     new HttpEntity<String>(body.toString(), headers);
-
-//            ResponseEntity<String> response = new RestTemplate().postForEntity(url, request, String.class);
-//
-//            String json = response.getBody();
-//            return json;
-
 
             return circuitBreaker.run(() -> restTemplate.postForEntity(url,request, String.class)).getBody();
 

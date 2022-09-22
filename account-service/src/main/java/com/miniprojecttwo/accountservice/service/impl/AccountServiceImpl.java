@@ -65,6 +65,10 @@ public class AccountServiceImpl implements AccountService {
             System.out.println("before one");
             account.setPaymentMethods(paymentTypes);
             System.out.println("after one");
+            var res = paymentTypes.stream().anyMatch(t->t.getName().equals(accountBody.getPreferredPaymentType()));
+            if(!res){
+                throw new RuntimeException("Payment method not valid");
+            }
             account.setPreferredPaymentMethod(accountBody.getPreferredPaymentType());
             account.setShippingAddress(accountBody.getShippingAddress());
             accountRepository.save(account);
