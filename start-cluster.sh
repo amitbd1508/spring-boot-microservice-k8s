@@ -1,6 +1,6 @@
 set -e
 set -x
 
-minikube start --vm-driver=virtualbox --memory='4000mb'
+minikube start --vm-driver=virtualbox --memory='9000mb'
 eval $(minikube docker-env)
 minikube addons enable metrics-server

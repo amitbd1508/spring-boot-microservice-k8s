@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
       app: account
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: account
-          image: amitbd1508/account-service:2.0
+          image: amitbd1508/account-service:2.5
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
