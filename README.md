@@ -19,6 +19,9 @@ Account , Order and Payment swagger docs will open in your browser
 ``sh <service name>-log.sh`` 
 Eg: ``sh order-log.sh``
 
+###
+- Video Link (https://drive.google.com/drive/folders/1JN_YGHDWQQC1KPMV4iRUcb6Pk7cb9-gx?usp=sharing)[https://drive.google.com/drive/folders/1JN_YGHDWQQC1KPMV4iRUcb6Pk7cb9-gx?usp=sharing]
+
 
 ### Team Member
 - Amit Ghosh (614170)
