@@ -16,4 +16,9 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+
+jwt:
+  expiry: ${JWT_EXPIRY}
+  secret: ${JWT_SECRET}
+
 payment.token : ${PAYMENT_TOKEN}

@@ -22,6 +22,11 @@ spring:
   sql:
     init:
       mode: always
+
+jwt:
+  expiry: ${JWT_EXPIRY}
+  secret: ${JWT_SECRET}
+
 account.url: ${ACCOUNT_URL}
 product.token : ${PRODUCT_TOKEN}
 

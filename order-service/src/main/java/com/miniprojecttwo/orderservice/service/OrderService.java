@@ -220,7 +220,7 @@ public class OrderService {
 
             // create headers
             HttpHeaders headers = new HttpHeaders();
-            headers.add("internal-token", this.productToken);
+            headers.add("internal-token", this.paymentToken);
             headers.add("Content-Type","application/json");
 
             // create request
