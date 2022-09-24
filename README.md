@@ -25,7 +25,7 @@ Account , Order and Payment swagger docs will open in your browser
 Eg: ``sh order-log.sh``
 
 ###
-- Video Link https://drive.google.com/drive/folders/1JN_YGHDWQQC1KPMV4iRUcb6Pk7cb9-gx?usp=sharing
+- Video Link [https://www.youtube.com/watch?v=oyJK7mQbVD0](https://www.youtube.com/watch?v=oyJK7mQbVD0)
 
 
 ### Team Member
