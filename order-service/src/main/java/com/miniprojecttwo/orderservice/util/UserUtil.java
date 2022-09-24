@@ -12,7 +12,6 @@ public class UserUtil {
     public static Integer getLoggedInUserId(){
 
         var obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("===============    "+ obj.toString());
         return 1;
     }
 

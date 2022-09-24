@@ -1,0 +1,33 @@
+apiVersion: skaffold/v2beta16
+kind: Config
+metadata:
+  name: spring-boot-microservice-k-s
+build:
+  artifacts:
+  - image: amitbd1508/account-service
+    context: account-service
+    docker:
+      dockerfile: Dockerfile
+  - image: amitbd1508/order-service
+    context: order-service
+    docker:
+      dockerfile: Dockerfile
+  - image: amitbd1508/payment-service
+    context: payment-service
+    docker:
+      dockerfile: Dockerfile
+  - image: amitbd1508/product-service
+    context: product-service
+    docker:
+      dockerfile: Dockerfile
+deploy:
+  kubectl:
+    manifests:
+    - k8s/account/db-deployment.yaml
+    - k8s/account/deployment.yaml
+    - k8s/order/db-deployment.yaml
+    - k8s/order/deployment.yaml
+    - k8s/payment/db-deployment.yaml
+    - k8s/payment/deployment.yaml
+    - k8s/product/db-deployment.yaml
+    - k8s/product/deployment.yaml

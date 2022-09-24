@@ -11,6 +11,11 @@
 ### Deploy 
 ``sh install-all.sh``
 
+# Or
+
+### Using Skaffold 
+``skaffold dev``
+
 ### Open Swagger
 ``sh open-api-docs.sh``
 Account , Order and Payment swagger docs will open in your browser
